@@ -4,8 +4,6 @@ from joblib import load
 from scraper.scraper import FinanceScraper
 from .utils import utils
 from RengoApi import settings
-from os import listdir
-import os
 
 
 class DAX(APIView):
@@ -30,3 +28,43 @@ class NYSEComposite(APIView):
         return Response(
             utils.calculate_response("INDEXNYSEGIS: NYA", self.scraper, self.model)
         )
+
+
+class NasdaqComposite(APIView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.scraper = FinanceScraper()
+        self.model = load(settings.BASE_DIR + "/RengoApi/models/NASDAQ.joblib")
+
+    def get(self, request):
+        return Response(
+            utils.calculate_response("INDEXNASDAQ: .IXIC", self.scraper, self.model)
+        )
+
+
+class DowJonesIndustrialAverage(APIView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.scraper = FinanceScraper()
+        self.model = load(settings.BASE_DIR + "/RengoApi/models/DOW30.joblib")
+
+    def get(self, request):
+        return Response(
+            utils.calculate_response("INDEXDJX: .DJI", self.scraper, self.model)
+        )
+
+
+class SAndP500(APIView):
+    """
+    S&P 500
+    """
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.scraper = FinanceScraper()
+        self.model = load(settings.BASE_DIR + "/RengoApi/models/S&P500.joblib")
+
+    def get(self, request):
+        return Response(
+            utils.calculate_response("INDEXSP: .INX", self.scraper, self.model)
+        )
+
